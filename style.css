@@ -1,0 +1,123 @@
+/* Global */
+:root {
+  /* Color */
+  --color-white: #ffffff;
+  --color-light-white: #eeeeee;
+  --color-dark-white: #bdbdbd;
+  --color-pink: #fe918d;
+  --color-dark-pink: #ff6863;
+  --color-grey: #616161;
+  --color-light-grey: #7c7979;
+  --color-dark-grey: #4d4d4d;
+  --color-blue: #73aace;
+  --color-yellow: #fff7d1;
+  --color-orange: #feb546;
+  --color-black: #000000;
+
+  /* Font size */
+  --font-xlarge: 48px;
+  --font-large: 28px;
+  --font-medium: 22px;
+  --font-regular: 18px;
+  --font-small: 16px;
+  --font-micro: 14px;
+
+  /* Font weight */
+  --weight-bold: 700;
+  --weight-semi-bold: 600;
+  --weight-regular: 400;
+
+  /* Size */
+  --size-border-radius: 4px;
+
+  /* Animation */
+  --animation-duration: 300ms;
+}
+
+/* Universal tags */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Open Sans", sans-serif;
+  cursor: default;
+}
+
+h1 {
+  font-size: var(--font-xlarge);
+  color: var(--color-dark-grey);
+  margin-bottom: 28px;
+}
+
+label {
+  font-size: var(--font-regular);
+  font-weight: var(--weight-semi-bold);
+  padding-bottom: 4px;
+  color: var(--color-grey);
+}
+
+input {
+  margin-bottom: 14px;
+  padding: 4px;
+}
+
+/* Novbar */
+.navbar {
+  display: flex;
+  justify-content: center;
+}
+
+.text-primary {
+  color: var(--color-pink);
+}
+
+/* Grocery form */
+#grocery-form {
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+}
+
+.form__group {
+  display: flex;
+  flex-direction: column;
+}
+
+#item,
+#date,
+#price {
+  font-size: var(--font-medium);
+  color: var(--color-dark-grey);
+}
+
+.submit__btn {
+  font-size: var(--font-regular);
+  background-color: var(--color-pink);
+  border: none;
+  outline: none;
+  margin-top: 8px;
+  padding: 8px 0;
+  color: var(--color-white);
+}
+
+.submit__btn:hover {
+  background-color: var(--color-dark-pink);
+  cursor: pointer;
+}
+
+/* Table */
+.table {
+  width: 60%;
+  margin: auto;
+  margin-top: 22px;
+  border-collapse: collapse;
+}
+
+th {
+  padding: 4px 28px;
+  color: var(--color-dark-grey);
+  border-top: 1px solid var(--color-grey);
+  border-bottom: 1px solid var(--color-grey);
+}

@@ -12,8 +12,44 @@
       crossorigin="anonymous"
     ></script>
     <link rel="stylesheet" href="style.css" />
-    <title>Grocery List</title>
+    <title>My Grocery List</title>
     <script src="main.js" defer></script>
   </head>
-  <body></body>
+  <body>
+    <nav class="navbar">
+      <h1>
+        <i class="fas fa-store text-primary"></i> My<span class="text-primary"
+          >Grocery</span
+        >List
+      </h1>
+    </nav>
+    <form id="grocery-form">
+      <div class="form__group">
+        <label for="item">Item</label>
+        <input type="text" id="item" calss="form-control" />
+      </div>
+      <div class="form__group">
+        <label for="date">Date of Purchase</label>
+        <input type="date" id="date" calss="form-control" />
+      </div>
+      <div class="form__group">
+        <label for="price">Price</label>
+        <input type="number" id="price" calss="form-control" />
+      </div>
+      <input type="submit" value="Add Grocery" class="submit__btn" />
+    </form>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Date of Purchase</th>
+          <th>Price</th>
+          <th>Use</th>
+          <th>Delete</th>
+          <th>Shopping List</th>
+        </tr>
+      </thead>
+      <tbody id="grocery-list"></tbody>
+    </table>
+  </body>
 </html>
