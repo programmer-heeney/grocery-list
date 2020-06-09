@@ -40,8 +40,10 @@
 }
 
 body {
+  width: 100vw;
   font-family: "Open Sans", sans-serif;
   cursor: default;
+  margin: 0;
 }
 
 h1 {
@@ -60,6 +62,7 @@ label {
 input {
   margin-bottom: 14px;
   padding: 4px;
+  border: 1px solid var(--color-light-grey);
 }
 
 /* Novbar */
@@ -101,7 +104,7 @@ input {
 
 /* Grocery form */
 #grocery-form {
-  width: 60%;
+  width: 70%;
   display: flex;
   flex-direction: column;
   margin: auto;
@@ -137,8 +140,7 @@ input {
 
 /* Table */
 .table {
-  width: 60%;
-  min-width: 500px;
+  width: 70%;
   margin: auto;
   margin-top: 22px;
   border-collapse: collapse;
@@ -156,9 +158,61 @@ td {
   padding: 14px 0;
 }
 
+tr {
+  transition: all var(--animation-duration) ease-out;
+}
+
+tr.anim-out {
+  opacity: 0;
+}
+
 tr:nth-child(even) {
   background-color: rgba(0, 0, 0, 0.1);
   border-top: 1px solid rgba(0, 0, 0, 0.3);
+}
+
+.btn {
+  display: flex;
+  justify-content: center;
+  color: var(--color-pink);
+  border: none;
+  outline: none;
+  font-size: 16px;
+}
+
+.btn:hover {
+  color: var(--color-dark-pink);
+  cursor: pointer;
+}
+
+/* Checkbox */
+input[type="checkbox"] {
+  position: absolute;
+  left: -3000%;
+}
+
+input[type="checkbox"] + label {
+  display: flex;
+  margin: auto;
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+  transition: all var(--animation-duration) ease-in-out;
+}
+
+.shopping-list + label {
+  border: 2px solid var(--color-pink);
+}
+
+.opened + label {
+  border: 2px solid var(--color-orange);
+}
+
+.shopping-list:checked + label {
+  background-color: var(--color-pink);
+}
+.opened:checked + label {
+  background-color: var(--color-orange);
 }
 
 /* For below 768px screen width */
@@ -176,12 +230,19 @@ tr:nth-child(even) {
     flex-direction: column;
   }
   .navbar > i {
-    font-size: 48px;
-    margin: 14px 0 0 0;
+    font-size: 7.5vw;
+    margin: 4vw 0 0 0;
   }
   .navbar > h1 {
     margin: 0 0 14px 0;
-    font-size: 38px;
+    padding: 0 14px;
+    font-size: 7vw;
+  }
+  .alert {
+    font-size: 2.5vh;
+  }
+  .submit__btn {
+    font-size: 3vh;
   }
   table {
     font-size: var(--font-small);

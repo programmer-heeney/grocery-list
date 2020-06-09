@@ -17,16 +17,22 @@ class UI {
 
   static addGroceryToKist(grocery) {
     const list = document.querySelector("#grocery-list");
-
+    const preRow = list.lastChild;
     const row = document.createElement("tr");
+    let rowIndex;
 
+    if (!preRow) {
+      rowIndex = 0;
+    } else {
+      rowIndex = preRow.sectionRowIndex + 1;
+    }
     row.innerHTML = `
     <td>${grocery.item}</td>
     <td>${grocery.date}</td>
     <td>${grocery.price}</td>
-    <td><a href='#' class="use__btn">X</a></td>
-    <td><a href='#' class="delete__btn">X</a></td>
-    <td><a href='#' class="shopping-list__btn">X</a></td>
+    <td><input type="checkbox" id="opened-${rowIndex}" class="opened"><label for="opened-${rowIndex}"></label></td>
+    <td><i class="fas fa-trash-alt delete__btn btn"></i></td>
+    <td><input type="checkbox" id="shopping-list-${rowIndex}" class="shopping-list"><label for="shopping-list-${rowIndex}"></label></td>
     `;
 
     list.appendChild(row);
@@ -34,7 +40,10 @@ class UI {
 
   static deleteGrocery(el) {
     if (el.classList.contains("delete__btn")) {
-      el.parentElement.parentElement.remove();
+      UI.animateOut(el.parentNode.parentNode);
+      setTimeout(() => {
+        el.parentElement.parentElement.remove();
+      }, 300);
     }
   }
 
@@ -54,6 +63,11 @@ class UI {
     if (div.classList.contains("alert-success")) {
       setTimeout(() => document.querySelector(".alert-success").remove(), 3000);
     }
+  }
+
+  static animateOut(row) {
+    // Effect animation
+    row.classList.add("anim-out");
   }
 
   static clearFields() {
@@ -82,10 +96,10 @@ class Store {
     localStorage.setItem("groceries", JSON.stringify(groceries));
   }
 
-  static removeGrocery(item) {
+  static removeGrocery(item, item__index) {
     const groceries = Store.getGrocery();
     groceries.forEach((grocery, index) => {
-      if (grocery.item === item) {
+      if (grocery.item === item && index == item__index) {
         groceries.splice(index, 1);
       }
     });
@@ -130,14 +144,21 @@ document.querySelector("#grocery-form").addEventListener("submit", (e) => {
 
 // Event: Remove a Grocery
 document.querySelector("#grocery-list").addEventListener("click", (e) => {
+  console.log(e.target);
   // Remove grocery from UI
   UI.deleteGrocery(e.target);
 
   // Remove grocery from store
-  Store.removeGrocery(
-    e.target.parentNode.parentNode.firstElementChild.textContent
-  );
+  if (e.target.classList.contains("delete__btn")) {
+    const index = Number(e.target.parentNode.parentNode.sectionRowIndex);
+    Store.removeGrocery(
+      e.target.parentNode.parentNode.firstElementChild.textContent,
+      index
+    );
+  }
 
   // Show success message
-  UI.showAlert("Grocery removed", "success");
+  if (e.target.classList.contains("delete__btn")) {
+    UI.showAlert("Grocery removed", "success");
+  }
 });
