@@ -1,10 +1,11 @@
 "use strict";
 // Grocery Class: Represent a Grocery
 class Grocery {
-  constructor(item, date, price) {
+  constructor(item, date, price, opened) {
     this.item = item;
     this.date = date;
     this.price = price.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, "$1,");
+    this.opened = opened;
   }
 }
 // UI Class: Handle UI Tasks
@@ -12,10 +13,10 @@ class UI {
   static displayGroceries() {
     const groceries = Store.getGrocery();
 
-    groceries.forEach((grocery) => UI.addGroceryToKist(grocery));
+    groceries.forEach((grocery) => UI.addGroceryToList(grocery));
   }
 
-  static addGroceryToKist(grocery) {
+  static addGroceryToList(grocery) {
     const list = document.querySelector("#grocery-list");
     const preRow = list.lastChild;
     const row = document.createElement("tr");
@@ -36,6 +37,11 @@ class UI {
     `;
 
     list.appendChild(row);
+    if (grocery.opened) {
+      const check = document.querySelector(`#opened-${rowIndex}`);
+      console.log(`#opened-${rowIndex}`);
+      check.checked = true;
+    }
   }
 
   static deleteGrocery(el) {
@@ -106,6 +112,17 @@ class Store {
 
     localStorage.setItem("groceries", JSON.stringify(groceries));
   }
+
+  static checkOpened(check, item__index) {
+    const groceries = Store.getGrocery();
+    const row = groceries.find((grocery, index) => item__index === index);
+
+    check === true ? (row.opened = true) : (row.opened = false);
+    groceries.splice(item__index, 1, row);
+    localStorage.setItem("groceries", JSON.stringify(groceries));
+
+    console.log(row);
+  }
 }
 
 // Event: Display Groceries
@@ -129,7 +146,7 @@ document.querySelector("#grocery-form").addEventListener("submit", (e) => {
     const grocery = new Grocery(item, date, price);
 
     // Add Grocery to UI
-    UI.addGroceryToKist(grocery);
+    UI.addGroceryToList(grocery);
 
     // Add grocery to store
     Store.addGrocery(grocery);
@@ -144,7 +161,6 @@ document.querySelector("#grocery-form").addEventListener("submit", (e) => {
 
 // Event: Remove a Grocery
 document.querySelector("#grocery-list").addEventListener("click", (e) => {
-  console.log(e.target);
   // Remove grocery from UI
   UI.deleteGrocery(e.target);
 
@@ -155,6 +171,12 @@ document.querySelector("#grocery-list").addEventListener("click", (e) => {
       e.target.parentNode.parentNode.firstElementChild.textContent,
       index
     );
+  }
+
+  // Handles a Checkbox
+  if (e.target.nodeName == "INPUT") {
+    const index = Number(e.target.parentNode.parentNode.sectionRowIndex);
+    Store.checkOpened(e.target.checked, index);
   }
 
   // Show success message
