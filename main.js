@@ -1,7 +1,8 @@
 "use strict";
 // Grocery Class: Represent a Grocery
 class Grocery {
-  constructor(item, date, price, opened, shoppingList) {
+  constructor(id, item, date, price, opened, shoppingList) {
+    this.id = id + 1;
     this.item = item;
     this.date = date;
     this.price = price.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, "$1,");
@@ -22,13 +23,13 @@ class UI {
     const preRow = list.lastChild;
     const row = document.createElement("tr");
     let rowIndex;
-
     if (!preRow) {
       rowIndex = 0;
     } else {
       rowIndex = preRow.sectionRowIndex + 1;
     }
     row.innerHTML = `
+    <td id="item-number">${grocery.id}</td>
     <td>${grocery.item}</td>
     <td>${grocery.date}</td>
     <td>${grocery.price}</td>
@@ -38,6 +39,7 @@ class UI {
     `;
 
     list.appendChild(row);
+
     if (grocery.opened) {
       const check = document.querySelector(`#opened-${rowIndex}`);
       check.checked = true;
@@ -51,9 +53,26 @@ class UI {
 
   static deleteGrocery(el) {
     if (el.classList.contains("delete__btn")) {
+      // el.parentNode.parentNode.firstElementChild.textContent =
+      //   el.parentNode.parentNode.sectionRowIndex + 1;
       UI.animateOut(el.parentNode.parentNode);
       setTimeout(() => {
         el.parentElement.parentElement.remove();
+        // Item number
+        const tds = document.querySelectorAll("#item-number");
+        tds.forEach((td, index) => {
+          td.innerHTML = ++index;
+        });
+        // Opened checkbox
+        const openCheckboxs = document.querySelectorAll(".opened");
+        openCheckboxs.forEach((openCheckbox, index) => {
+          openCheckbox.innerHTML = `<td><input type="checkbox" id="opened-${index}" class="opened"><label for="opened-${index}"></label></td>`;
+        });
+        // Shopping-list checkbox
+        const shoppingCheckboxs = document.querySelectorAll(".shopping-list");
+        shoppingCheckboxs.forEach((shoppingCheckbox, index) => {
+          shoppingCheckbox.innerHTML = `<td><input type="checkbox" id="shopping-list-${index}" class="shopping-list"><label for="shopping-list-${index}"></label></td>`;
+        });
       }, 300);
     }
   }
@@ -110,9 +129,16 @@ class Store {
   static removeGrocery(item, item__index) {
     const groceries = Store.getGrocery();
     groceries.forEach((grocery, index) => {
-      if (grocery.item === item && index == item__index) {
+      // if (grocery.item === item && index == item__index) {
+      //   groceries.splice(index, 1);
+      // }
+      if (index == item) {
         groceries.splice(index, 1);
       }
+    });
+    let index = 0;
+    groceries.map((grocery) => {
+      grocery.id = ++index;
     });
 
     localStorage.setItem("groceries", JSON.stringify(groceries));
@@ -146,6 +172,14 @@ document.querySelector("#grocery-form").addEventListener("submit", (e) => {
   e.preventDefault();
 
   // Get form values
+  const tbody = document.querySelector("#grocery-list");
+  const lastItem = tbody.lastElementChild;
+  let id;
+  if (!lastItem) {
+    id = 0;
+  } else {
+    id = lastItem.sectionRowIndex + 1;
+  }
   const item = document.querySelector("#item").value;
   const date = document.querySelector("#date").value;
   const price = document.querySelector("#price").value;
@@ -155,7 +189,7 @@ document.querySelector("#grocery-form").addEventListener("submit", (e) => {
     UI.showAlert("Please fill in an item field", "danger");
   } else {
     // Instantiate Grocery
-    const grocery = new Grocery(item, date, price);
+    const grocery = new Grocery(id, item, date, price);
 
     // Add Grocery to UI
     UI.addGroceryToList(grocery);
