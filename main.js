@@ -1,11 +1,12 @@
 "use strict";
 // Grocery Class: Represent a Grocery
 class Grocery {
-  constructor(item, date, price, opened) {
+  constructor(item, date, price, opened, shoppingList) {
     this.item = item;
     this.date = date;
     this.price = price.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, "$1,");
     this.opened = opened;
+    this.shoppingList = shoppingList;
   }
 }
 // UI Class: Handle UI Tasks
@@ -39,7 +40,11 @@ class UI {
     list.appendChild(row);
     if (grocery.opened) {
       const check = document.querySelector(`#opened-${rowIndex}`);
-      console.log(`#opened-${rowIndex}`);
+      check.checked = true;
+    }
+
+    if (grocery.shoppingList) {
+      const check = document.querySelector(`#shopping-list-${rowIndex}`);
       check.checked = true;
     }
   }
@@ -120,8 +125,15 @@ class Store {
     check === true ? (row.opened = true) : (row.opened = false);
     groceries.splice(item__index, 1, row);
     localStorage.setItem("groceries", JSON.stringify(groceries));
+  }
 
-    console.log(row);
+  static checkShoppingList(check, item__index) {
+    const groceries = Store.getGrocery();
+    const row = groceries.find((grocery, index) => item__index === index);
+
+    check === true ? (row.shoppingList = true) : (row.shoppingList = false);
+    groceries.splice(item__index, 1, row);
+    localStorage.setItem("groceries", JSON.stringify(groceries));
   }
 }
 
@@ -176,7 +188,12 @@ document.querySelector("#grocery-list").addEventListener("click", (e) => {
   // Handles a Checkbox
   if (e.target.nodeName == "INPUT") {
     const index = Number(e.target.parentNode.parentNode.sectionRowIndex);
-    Store.checkOpened(e.target.checked, index);
+    if (e.target.classList.contains("opened")) {
+      Store.checkOpened(e.target.checked, index);
+    }
+    if (e.target.classList.contains("shopping-list")) {
+      Store.checkShoppingList(e.target.checked, index);
+    }
   }
 
   // Show success message
